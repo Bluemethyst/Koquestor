@@ -44,37 +44,37 @@ fun App() {
         var sendRequest by remember { mutableStateOf(false) }
         Row {
             Sidebar()
-        }
-        Column {
-            TextField(value = url, onValueChange = { url = it })
-            Button(onClick = { sendRequest = true }) {
-                Text("Send Request")
-            }
-            Column(modifier = Modifier.verticalScroll(
-                state = rememberScrollState()
-            )) {
-                Text("Response Code: $responseCode")
-                Text("Response: $response")
-                if (sendRequest) {
-                    LaunchedEffect(key1 = sendRequest) {
-                        val client = HttpClient()
-                        var httpResponse: HttpResponse? = null
-                        try {
-                            httpResponse = client.get(url.text)
-                            response = httpResponse.bodyAsText()
-                            responseCode = httpResponse.status.value
-                            sendRequest = false
-                        } catch (e: Exception) {
-                            if (e.message == "Connection refused: getsockopt") {
-                                response = "Connection refused, Maybe incorrect URL?"
-                            } else {
-                                response = e.message ?: "Unknown error"
-                                println(e)
-                            }
-                            if (httpResponse != null) {
+            Column {
+                TextField(value = url, onValueChange = { url = it })
+                Button(onClick = { sendRequest = true }) {
+                    Text("Send Request")
+                }
+                Column(modifier = Modifier.verticalScroll(
+                    state = rememberScrollState()
+                )) {
+                    Text("Response Code: $responseCode")
+                    Text("Response: $response")
+                    if (sendRequest) {
+                        LaunchedEffect(key1 = sendRequest) {
+                            val client = HttpClient()
+                            var httpResponse: HttpResponse? = null
+                            try {
+                                httpResponse = client.get(url.text)
+                                response = httpResponse.bodyAsText()
                                 responseCode = httpResponse.status.value
+                                sendRequest = false
+                            } catch (e: Exception) {
+                                if (e.message == "Connection refused: getsockopt") {
+                                    response = "Connection refused, Maybe incorrect URL?"
+                                } else {
+                                    response = e.message ?: "Unknown error"
+                                    println(e)
+                                }
+                                if (httpResponse != null) {
+                                    responseCode = httpResponse.status.value
+                                }
+                                sendRequest = false
                             }
-                            sendRequest = false
                         }
                     }
                 }
