@@ -3,6 +3,7 @@ package dev.bluemethyst.apps.koquestor
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -13,8 +14,11 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.useResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import dev.bluemethyst.apps.koquestor.gui.Sidebar
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -38,7 +42,9 @@ fun App() {
         var response by remember { mutableStateOf("") }
         var responseCode by remember { mutableStateOf(0) }
         var sendRequest by remember { mutableStateOf(false) }
-
+        Row {
+            Sidebar()
+        }
         Column {
             TextField(value = url, onValueChange = { url = it })
             Button(onClick = { sendRequest = true }) {
@@ -77,16 +83,17 @@ fun App() {
     }
 }
 
-/*fun FrameWindowScope.setMinSize() {
-    window.minimumSize = Dimension(1280, 720)  // doesnt work for changing dimensions
-}*/                                            // https://stackoverflow.com/questions/78532146/how-can-i-change-the-default-window-dimensions-for-kotlin-compose-desktop
 
 fun main() = application {
+    val state = rememberWindowState(  // https://stackoverflow.com/questions/78532146/how-can-i-change-the-default-window-dimensions-for-kotlin-compose-desktop
+        width = 1280.dp,
+        height = 720.dp,
+    )
     Window(
         onCloseRequest = ::exitApplication,
         title = "Koquestor",
+        state = state,
         icon = BitmapPainter(useResource("assets/koquestor.ico", ::loadImageBitmap)),
-
     ) {
         App()
     }
