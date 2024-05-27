@@ -1,9 +1,12 @@
 package dev.bluemethyst.apps.koquestor
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -30,6 +33,7 @@ val DarkColorPalette = darkColorScheme(
 )
 
 val LightColorPalette = lightColorScheme(
+    background = Color(0xFFFFFFFF),
     primary = Color(0xFF1FAA59),
     secondary = Color(0xFFB2FF59)
 )
@@ -37,7 +41,9 @@ val LightColorPalette = lightColorScheme(
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(colorScheme = if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
+    val colorScheme = if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette
+    MaterialTheme(colorScheme = colorScheme) {
+        Box(modifier = Modifier.fillMaxSize().background(colorScheme.background)) {
         var url by remember { mutableStateOf(TextFieldValue()) }
         var response by remember { mutableStateOf("") }
         var responseCode by remember { mutableStateOf(0) }
@@ -81,7 +87,7 @@ fun App() {
             }
         }
     }
-}
+}}
 
 
 fun main() = application {
